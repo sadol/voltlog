@@ -5,7 +5,7 @@ import job
 import multithreading
 
 """
-Voltcraft PSU server.
+Voltcraft PSU server class
 """
 
 
