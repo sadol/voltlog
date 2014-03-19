@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-from modelsDict import models, operators, lefts
+from libs.modelsDict import models, operators, lefts
 
 
-#error classes for Condition class:
 class WrongOperatorError(Exception):
     pass
 
@@ -136,6 +135,15 @@ class Condition():
     def __str__(self):
         msg = 'Model:{} --> {} {} {}'
         return msg.format(self.model, self.left, self.operator, self.right)
+
+    def getInfo(self):
+        """gets info about condition
+
+        Arguments:
+
+        Returns:
+            tuple (left, operator, right) -> all strings"""
+        return self.left, self.operator, self.right
 
     def get_range(self):
         """extracts range from condition

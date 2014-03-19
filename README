@@ -1,1 +1,36 @@
-Voltcraft Power Supply Unit`s remote control tool.
+Voltcraft Power Supply Unit remote control tool.
+
+1. Prerequisites:
+
+    -   Pyro4
+    -   pyserial
+    -   matplotlib
+
+
+2. Installation:
+
+        Run mainServer.py (for example : ./mainServer -d /dev/ttyUSB0)
+    on the server host connected to the PSU device in the local network.
+    It is possibile to run this server in the remote network but you need
+    to care about DNS and cryptography by yourself (see Pyro4 manuals).
+    Default port number for the server is 50000.
+        Server has been tested on Voltcraft PSP 12010 Power Supply only
+    but it should handle other PSP models too. Please equip with good
+    quality RS232/USB converter which should connect PSU with server PC.
+
+
+3. Usage:
+
+        Client program has GUI made in tkinter. Client`s main window is
+    composed of three parts : server connection frame, job creation frame
+    and plot frame. You need to successfuly connect to the PSU server to
+    unblock other parts of main window . Disconnect , Stop and close window
+    buttons turn off PSU immediately (and leave PSU in offline state in case
+    of Disconnect and close window buttons)
+
+
+4. Problems
+
+        Voltcraft`s PSUs are not good quatity products so be prepared to
+    somewhat sluggish response from device. Do not apply high frequency
+    programs because of low responsivness and high risk of damage PSU`s relays.

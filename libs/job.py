@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import condition
+import libs.condition as condition
 
 
 class WrongConditionSet(Exception):
@@ -10,7 +10,7 @@ class Job():
     """
     Voltcraft`s PSU basic work unit.
     """
-    def __init__(self, psu, what, how_long, stop_cond=[]):
+    def __init__(self, psu, what, how_long=0, stop_cond=[]):
         """Arguments:
             psu  -> (VoltcraftPSU object) power supply object
             what -> (tuple : (func alias, float)) VoltdraftPSU method
@@ -28,7 +28,6 @@ class Job():
                  exceeded."""
         self.psu = psu  # PSU device
         self.what = what  # action
-        self.status = 'w'  # waiting
         self.how_long = how_long
         self.stop_cond = stop_cond
         #psu function aliases defined here (not in modelDicts module)
@@ -47,7 +46,7 @@ class Job():
     def setHowLong(self, length):
         """This variable must be properly set because it acts as a safety'fuse'
         in case of incorectly set stop conditions list."""
-        if length <= 0:
+        if length < 0:
             msg = 'how_long :{} , this variable must be set as positive int.'
             msg = msg.format(length)
             raise WrongConditionSet(msg)
@@ -58,7 +57,6 @@ class Job():
         """runs the job and updates.
         WARNING: self.psu device must prepared earlier by scheduler to proper
                  use this function"""
-        self.psu.getID()  # check if PSU is connected
         if(self.what[1] is not None):
             self.funcs[self.what[0]](self.what[1])  # setter
 
@@ -97,6 +95,17 @@ class Job():
             #correct P range silently (I and V take precedence over P):
             self.subs['P'] = power_min, power_max
 
+    def getInfo(self):
+        """gets info about a job in the form of tuple of strings
+
+        Arguments:
+
+        Rreturns:
+            tuple (psu, what, how_long, cond_list)
+        """
+        conds = [cond for cond in self.subs.items()]
+        return self.psu.model, self.what, self.how_long, conds
+
 if __name__ == '__main__':
     import time
     import voltcraftPSU
@@ -107,8 +116,7 @@ if __name__ == '__main__':
     psu.getID()
     my_length = 2
     try:
-        psu.switch('keyb_off')
-        psu.switch('power_on')
+        psu.remoteMode()
         #first simple:
         job1 = Job(psu=psu, what=('setv', 10), how_long=my_length)
         job1.run()
@@ -129,5 +137,4 @@ if __name__ == '__main__':
     except:
         print('Exception {} trapped.'.format(sys.exc_info()))
     finally:
-        psu.switch('keyb_on')
-        psu.switch('power_off')
+        psu.manualMode()

@@ -16,17 +16,20 @@ Dictionary items structure:
         `Imin' -> (float) min current
         `Vmax' -> (float) max voltage
         `Imax' -> (float) max current
-
+        `init' -> (bytestring) model id transmited by the  PSU
         INFO: multipliers are derived from the formula :
               (element 1)*maxV * (element 2)*maxI = 200W
 """
 
 models = {'1405': {'Vmul': 1.0, 'Imul': 1.0, 'Vmin': 0.1, 'Imin': 0.0,
-                   'Vmax': 40.0, 'Imax': 5.0, 'Pmin': 0.0, 'Pmax': 200.0},
+                   'Vmax': 40.0, 'Imax': 5.0, 'Pmin': 0.0, 'Pmax': 200.0,
+                   'init': b'\xb2\x01'},
           '12010': {'Vmul': 2.0, 'Imul': 0.5, 'Vmin': 0.1, 'Imin': 0.0,
-                    'Vmax': 20.0, 'Imax': 10.0, 'Pmin': 0.0, 'Pmax': 200.0},
+                    'Vmax': 20.0, 'Imax': 10.0, 'Pmin': 0.0, 'Pmax': 200.0,
+                    'init': b'\xb2\x02'},
           '1803': {'Vmul': 0.5, 'Imul': 2.0, 'Vmin': 0.1, 'Imin': 0.0,
-                   'Vmax': 80.0, 'Imax': 2.5, 'Pmin': 0.0, 'Pmax': 200.0}}
+                   'Vmax': 80.0, 'Imax': 2.5, 'Pmin': 0.0, 'Pmax': 200.0,
+                   'init': b'\xb2\x03'}}
 
 #commands for voltcraft data frames
 commands = {'set_voltage': b'\xaa',
@@ -47,7 +50,6 @@ specValues = {'power_on': b'\x01\x00',
 
 frame_size = 3  # raw data frame contains 3 bytes
 
-
 #voltcraft PSUs job operators set
 #INFO: != and == operators not supported due to low PSU precision
 operators = {'>=', '<='}
@@ -57,4 +59,5 @@ operators = {'>=', '<='}
 lefts = {'V', 'I', 'P'}
 
 #job statuses:
-statuses = {'p': 'pending', 'e': 'error', 'w': 'waiting', 'c': 'completed'}
+statuses = {'p': 'pending', 'e': 'error', 'w': 'waiting',
+            'c': 'completed', 'x': 'canceled'}
