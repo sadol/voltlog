@@ -545,13 +545,10 @@ class MainPanel(ttk.Frame):
     def _buttonThread(self):
         """threaded function to service start button apperance"""
         self._pressed(self.startBut)
-        while True:
-            flag = self.psuServer.getSchedulerStatus()
+        while self.psuServer.getSchedulerStatus():
             time.sleep(float(self.frequency.get()))
-            if not flag:
-                self._blockWidgets(self.initWidgets | self.queueWidgets, False)
-                self._pressed(self.startBut, False)
-                break
+        self._blockWidgets(self.initWidgets | self.queueWidgets, False)
+        self._pressed(self.startBut, False)
 
     def _stop(self):
         """stops scheduler"""
